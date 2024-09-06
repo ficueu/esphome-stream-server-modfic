@@ -4,6 +4,8 @@
 #include "esphome/components/socket/socket.h"
 #include "esphome/components/uart/uart.h"
 #include "esphome/core/hal.h"
+#include "esphome/core/gpio.h"
+#include "esphome/core/helpers.h"
 
 #ifdef USE_BINARY_SENSOR
 #include "esphome/components/binary_sensor/binary_sensor.h"
