@@ -2,6 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import uart
 from esphome.const import CONF_ID, CONF_PORT, CONF_BUFFER_SIZE, CONF_FLOW_CONTROL_PIN
+from esphome.cpp_helpers import gpio_pin_expression
 from esphome import pins
 
 # ESPHome doesn't know the Stream abstraction yet, so hardcode to use a UART for now.
