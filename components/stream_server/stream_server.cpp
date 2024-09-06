@@ -162,13 +162,14 @@ void StreamServerComponent::write() {
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
 
-            if (this->flow_control_pin_ != nullptr)
-                this->flow_control_pin_->digital_write(true);
+            // if (this->flow_control_pin_ != nullptr)
+            //     this->flow_control_pin_->digital_write(true);
 
             this->stream_->write_array(buf, read);
+            ESP_LOGD(TAG, "WRITE");
 
-            if (this->flow_control_pin_ != nullptr)
-                this->flow_control_pin_->digital_write(false);
+            // if (this->flow_control_pin_ != nullptr)
+            //     this->flow_control_pin_->digital_write(false);
 
         if (read == 0 || errno == ECONNRESET) {
             ESP_LOGD(TAG, "Client %s disconnected", client.identifier.c_str());
