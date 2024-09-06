@@ -4,7 +4,7 @@ from typing import Literal
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import uart
-from esphome.const import CONF_ID, CONF_PORT, CONF_BUFFER_SIZE
+from esphome.const import CONF_ID, CONF_PORT, CONF_BUFFER_SIZE, CONF_FLOW_CONTROL_PIN
 from esphome.cpp_helpers import gpio_pin_expression
 from esphome import pins
 
@@ -16,8 +16,6 @@ AUTO_LOAD = ["socket"]
 DEPENDENCIES = ["uart", "network"]
 
 MULTI_CONF = True
-
-CONF_FLOW_CONTROL_PIN = "flow_control_pin"
 
 ns = cg.global_ns
 StreamServerComponent = ns.class_("StreamServerComponent", cg.Component)
@@ -52,8 +50,8 @@ async def to_code(config):
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
 
     if CONF_FLOW_CONTROL_PIN in config:
-        flow_control_pin = await cg.gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
-        cg.add(var.set_flow_control_pin(flow_control_pin))
+        pin = await gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
+        cg.add(var.set_flow_control_pin(pin))
 
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
