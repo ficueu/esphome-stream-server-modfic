@@ -14,6 +14,9 @@ using namespace esphome;
 
 void StreamServerComponent::setup() {
     ESP_LOGCONFIG(TAG, "Setting up stream server...");
+    if (this->flow_control_pin_ != nullptr) {
+        this->flow_control_pin_->setup();
+    }
 
     // The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
     this->buf_ = std::unique_ptr<uint8_t[]>{new uint8_t[this->buf_size_]};
@@ -157,7 +160,14 @@ void StreamServerComponent::write() {
             continue;
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
+        
+            if (this->flow_control_pin_ != nullptr)
+                this->flow_control_pin_->digital_write(true);
+
             this->stream_->write_array(buf, read);
+
+            if (this->flow_control_pin_ != nullptr)
+                this->flow_control_pin_->digital_write(false);
 
         if (read == 0 || errno == ECONNRESET) {
             ESP_LOGD(TAG, "Client %s disconnected", client.identifier.c_str());

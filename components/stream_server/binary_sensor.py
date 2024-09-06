@@ -9,7 +9,7 @@ from . import ns, StreamServerComponent
 
 CONF_CONNECTED = "connected"
 CONF_STREAM_SERVER = "stream_server"
-CONF_FLOW_PIN = "flow_pin"
+
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -18,7 +18,6 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Optional(CONF_FLOW_PIN): pins.gpio_output_pin_schema,
     }
 )
 
@@ -28,7 +27,3 @@ async def to_code(config):
 
     sens = await binary_sensor.new_binary_sensor(config[CONF_CONNECTED])
     cg.add(server.set_connected_sensor(sens))
-
-    if CONF_FLOW_PIN in config:
-        flow_pin = await cg.gpio_pin_expression(config[CONF_FLOW_PIN])
-        cg.add(var.set_flow_pin(flow_pin))
