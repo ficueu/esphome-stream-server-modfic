@@ -139,6 +139,7 @@ void StreamServerComponent::flush() {
         iov[1].iov_len = this->buf_head_ - (client.position + iov[0].iov_len);
         if ((written = client.socket->writev(iov, 2)) > 0) {
             client.position += written;
+            ESP_LOGD(TAG, "WRITE");
         } else if (written == 0 || errno == ECONNRESET) {
             ESP_LOGD(TAG, "Client %s disconnected", client.identifier.c_str());
             client.disconnected = true;
@@ -161,9 +162,6 @@ void StreamServerComponent::write() {
             continue;
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
-        {
-            ESP_LOGD(TAG, "WRITE");
-        }
 
             // if (this->flow_control_pin_ != nullptr)
             //     this->flow_control_pin_->digital_write(true);
