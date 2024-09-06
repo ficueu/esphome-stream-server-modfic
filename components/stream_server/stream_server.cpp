@@ -43,7 +43,7 @@ void StreamServerComponent::loop()
     this->accept();
     this->read();
     this->flush();
-    //this->write();
+    this->write();
     this->cleanup();
 }
 
@@ -157,6 +157,7 @@ void StreamServerComponent::flush()
         if ((written = client.socket->writev(iov, 2)) > 0)
         {
             client.position += written;
+            ESP_LOGD(TAG, "WRITE %d", written);
         }
         else if (written == 0 || errno == ECONNRESET)
         {
