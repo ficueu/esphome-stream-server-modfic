@@ -4,6 +4,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/util.h"
 #include "esphome/core/version.h"
+#include "esphome/core/helpers.h"
 
 #include "esphome/components/network/util.h"
 #include "esphome/components/socket/socket.h"
@@ -160,7 +161,7 @@ void StreamServerComponent::write() {
             continue;
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
-        
+
             if (this->flow_control_pin_ != nullptr)
                 this->flow_control_pin_->digital_write(true);
 
