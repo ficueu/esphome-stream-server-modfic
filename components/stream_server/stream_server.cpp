@@ -161,12 +161,14 @@ void StreamServerComponent::write() {
             continue;
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
+        {
+            ESP_LOGD(TAG, "WRITE");
+        }
 
             // if (this->flow_control_pin_ != nullptr)
             //     this->flow_control_pin_->digital_write(true);
 
             this->stream_->write_array(buf, read);
-            ESP_LOGD(TAG, "WRITE");
 
             // if (this->flow_control_pin_ != nullptr)
             //     this->flow_control_pin_->digital_write(false);
