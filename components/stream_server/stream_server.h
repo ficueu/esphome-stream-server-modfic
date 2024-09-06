@@ -21,6 +21,7 @@ public:
     explicit StreamServerComponent(esphome::uart::UARTComponent *stream) : stream_{stream} {}
     void set_uart_parent(esphome::uart::UARTComponent *parent) { this->stream_ = parent; }
     void set_buffer_size(size_t size) { this->buf_size_ = size; }
+    void set_flow_control_pin(GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 
 #ifdef USE_BINARY_SENSOR
     void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
@@ -39,6 +40,7 @@ public:
     void set_port(uint16_t port) { this->port_ = port; }
 
 protected:
+    GPIOPin *flow_control_pin_{nullptr};
     void publish_sensor();
 
     void accept();

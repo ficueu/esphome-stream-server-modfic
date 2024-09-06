@@ -1,24 +1,15 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome import automation, core
-from esphome.automation import Condition, maybe_simple_id
 from esphome.components import binary_sensor
 from esphome.const import (
     DEVICE_CLASS_CONNECTIVITY,
     ENTITY_CATEGORY_DIAGNOSTIC,
-    CONF_ON_PRESS, 
-    CONF_ON_RELEASE,
-    CONF_TRIGGER_ID,
 )
 from . import ns, StreamServerComponent
 
 CONF_CONNECTED = "connected"
 CONF_STREAM_SERVER = "stream_server"
-
-PressTrigger = ns.class_("PressTrigger", automation.Trigger.template())
-ReleaseTrigger = ns.class_(
-    "ReleaseTrigger", automation.Trigger.template()
-)
+CONF_FLOW_PIN = "flow_pin"
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -27,19 +18,9 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Optional(CONF_ON_PRESS): automation.validate_automation(
-            {
-                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(PressTrigger),
-            }
-        ),
-        cv.Optional(CONF_ON_RELEASE): automation.validate_automation(
-            {
-                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ReleaseTrigger),
-            }
-        ),
+        cv.Optional(CONF_FLOW_PIN): pins.gpio_output_pin_schema,
     }
 )
-
 
 
 async def to_code(config):
@@ -47,3 +28,7 @@ async def to_code(config):
 
     sens = await binary_sensor.new_binary_sensor(config[CONF_CONNECTED])
     cg.add(server.set_connected_sensor(sens))
+
+    if CONF_FLOW_PIN in config:
+        flow_pin = await cg.gpio_pin_expression(config[CONF_FLOW_PIN])
+        cg.add(var.set_flow_pin(flow_pin))
