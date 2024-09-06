@@ -43,7 +43,7 @@ public:
     void set_port(uint16_t port) { this->port_ = port; }
 
 protected:
-    GPIOPin *flow_control_pin_{nullptr};
+    // GPIOPin *flow_control_pin_{nullptr};
     void publish_sensor();
 
     void accept();
