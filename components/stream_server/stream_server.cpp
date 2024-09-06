@@ -110,6 +110,7 @@ void StreamServerComponent::read()
     int available;
     while ((available = this->stream_->available()) > 0)
     {
+        ESP_LOGD(TAG, "WRITE");
         size_t free = this->buf_size_ - (this->buf_head_ - this->buf_tail_);
         if (free == 0)
         {
@@ -184,9 +185,6 @@ void StreamServerComponent::write()
     {
         if (client.disconnected)
             continue;
-
-        if (sizeof(buf)> 0)
-            ESP_LOGD(TAG, "WRITE");
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
 
