@@ -52,7 +52,7 @@ protected:
     void flush();
     void write();
 
-    GPIOPin *flow_control_pin_{nullptr};
+    esphome::gpio::GPIOPin *flow_control_pin_{nullptr};
     
     size_t buf_index(size_t pos) { return pos & (this->buf_size_ - 1); }
     /// Return the number of consecutive elements that are ahead of @p pos in memory.
