@@ -194,7 +194,7 @@ void StreamServerComponent::write()
 
         // if (this->flow_control_pin_ != nullptr)
         //     this->flow_control_pin_->digital_write(false);
-        ESP_LOGD(TAG, "READ %d ", read);
+        ESP_LOGD(TAG, "READ %d ", sizeof(buf));
         if (read == 0 || errno == ECONNRESET)
         {
             ESP_LOGD(TAG, "Client %s disconnected", client.identifier.c_str());
