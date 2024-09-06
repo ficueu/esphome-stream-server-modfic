@@ -3,10 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/socket/socket.h"
 #include "esphome/components/uart/uart.h"
-#include "esphome/core/hal.h"
 #include "esphome/core/gpio.h"
-#include "esphome/core/helpers.h"
-#include "esphome/core/component.h"
 
 #ifdef USE_BINARY_SENSOR
 #include "esphome/components/binary_sensor/binary_sensor.h"
@@ -53,6 +50,7 @@ protected:
     void read();
     void flush();
     void write();
+    
     GPIOPin *flow_control_pin_{nullptr};
     
     size_t buf_index(size_t pos) { return pos & (this->buf_size_ - 1); }
