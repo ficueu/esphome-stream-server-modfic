@@ -184,8 +184,8 @@ void StreamServerComponent::write()
     {
         if (client.disconnected)
             continue;
-            
-        if (buf > 0)
+
+        if (sizeof(buf)> 0)
             ESP_LOGD(TAG, "WRITE");
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
