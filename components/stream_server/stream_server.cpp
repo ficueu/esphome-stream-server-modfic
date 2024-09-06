@@ -184,15 +184,15 @@ void StreamServerComponent::write()
     {
         if (client.disconnected)
             continue;
+            
+        if (buf > 0)
+            ESP_LOGD(TAG, "WRITE");
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
 
             // if (this->flow_control_pin_ != nullptr)
             //     this->flow_control_pin_->digital_write(true);
-        if (buf > 0)
-        {
-            ESP_LOGD(TAG, "WRITE");
-        }
+
         this->stream_->write_array(buf, read);
 
         // if (this->flow_control_pin_ != nullptr)
