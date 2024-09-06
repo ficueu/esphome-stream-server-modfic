@@ -100,6 +100,7 @@ void StreamServerComponent::read() {
     int available;
     while ((available = this->stream_->available()) > 0) {
         size_t free = this->buf_size_ - (this->buf_head_ - this->buf_tail_);
+        ESP_LOGD(TAG, "WRITE");
         if (free == 0) {
             // Only overwrite if nothing has been added yet, otherwise give flush() a chance to empty the buffer first.
             if (len > 0)
@@ -139,7 +140,6 @@ void StreamServerComponent::flush() {
         iov[1].iov_len = this->buf_head_ - (client.position + iov[0].iov_len);
         if ((written = client.socket->writev(iov, 2)) > 0) {
             client.position += written;
-            ESP_LOGD(TAG, "WRITE");
         } else if (written == 0 || errno == ECONNRESET) {
             ESP_LOGD(TAG, "Client %s disconnected", client.identifier.c_str());
             client.disconnected = true;
