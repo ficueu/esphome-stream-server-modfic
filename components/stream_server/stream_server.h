@@ -6,6 +6,7 @@
 #include "esphome/core/hal.h"
 #include "esphome/core/gpio.h"
 #include "esphome/core/helpers.h"
+#include "esphome/core/component.h"
 
 #ifdef USE_BINARY_SENSOR
 #include "esphome/components/binary_sensor/binary_sensor.h"
@@ -43,7 +44,7 @@ public:
     void set_port(uint16_t port) { this->port_ = port; }
 
 protected:
-    // GPIOPin *flow_control_pin_{nullptr};
+    GPIOPin *flow_control_pin_{nullptr};
     void publish_sensor();
 
     void accept();
