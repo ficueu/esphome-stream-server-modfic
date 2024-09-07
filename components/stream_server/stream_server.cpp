@@ -42,7 +42,7 @@ void StreamServerComponent::loop()
 {
     this->accept();
     this->read();
-    this->flush();
+    this->ss_flush();
     this->write();
     this->cleanup();
 }
@@ -139,7 +139,7 @@ void StreamServerComponent::read()
     }
 }
 
-void StreamServerComponent::flush()
+void StreamServerComponent::ss_flush()
 {
     ssize_t written;
     this->buf_tail_ = this->buf_head_;
