@@ -42,7 +42,7 @@ void StreamServerComponent::loop()
 {
     this->accept();
     this->read();
-    this->flush();
+    this->ss_flush();
     this->write();
     this->cleanup();
 }
@@ -109,9 +109,6 @@ void StreamServerComponent::read()
 {
     size_t len = 0;
     int available;
-    if (this->flow_control_pin_ != nullptr)
-        this->flow_control_pin_->digital_write(false);
-        
     while ((available = this->stream_->available()) > 0)
     {
         // UART INCOMING EVENT
@@ -142,7 +139,7 @@ void StreamServerComponent::read()
     }
 }
 
-void StreamServerComponent::flush()
+void StreamServerComponent::ss_flush()
 {
     ssize_t written;
     this->buf_tail_ = this->buf_head_;
@@ -208,6 +205,10 @@ void StreamServerComponent::write()
             // }
             this->stream_->write_array(buf, read);
         }
+
+        this->flush();
+        if (this->flow_control_pin_ != nullptr)
+            this->flow_control_pin_->digital_write(false);
 
         if (read == 0 || errno == ECONNRESET)
         {
