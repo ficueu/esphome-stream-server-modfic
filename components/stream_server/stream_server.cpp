@@ -51,6 +51,7 @@ void StreamServerComponent::dump_config()
 {
     ESP_LOGCONFIG(TAG, "Stream Server:");
     ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address().c_str(), this->port_);
+    LOG_PIN("  Flow Control Pin: ", this->flow_control_pin_);
 #ifdef USE_BINARY_SENSOR
     LOG_BINARY_SENSOR("  ", "Connected:", this->connected_sensor_);
 #endif
@@ -176,6 +177,8 @@ void StreamServerComponent::flush()
 
         this->buf_tail_ = std::min(this->buf_tail_, client.position);
     }
+    if (this->flow_control_pin_ != nullptr)
+        this->flow_control_pin_->digital_write(false);
 }
 
 void StreamServerComponent::write()
@@ -204,10 +207,6 @@ void StreamServerComponent::write()
             // }
             this->stream_->write_array(buf, read);
         }
-
-        if (this->flow_control_pin_ != nullptr)
-            this->flow_control_pin_->digital_write(false);
-        flowpin = 0;
 
         if (read == 0 || errno == ECONNRESET)
         {
