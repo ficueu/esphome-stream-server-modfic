@@ -109,6 +109,9 @@ void StreamServerComponent::read()
 {
     size_t len = 0;
     int available;
+    if (this->flow_control_pin_ != nullptr)
+        this->flow_control_pin_->digital_write(false);
+        
     while ((available = this->stream_->available()) > 0)
     {
         // UART INCOMING EVENT
@@ -177,8 +180,6 @@ void StreamServerComponent::flush()
 
         this->buf_tail_ = std::min(this->buf_tail_, client.position);
     }
-    if (this->flow_control_pin_ != nullptr)
-        this->flow_control_pin_->digital_write(false);
 }
 
 void StreamServerComponent::write()
