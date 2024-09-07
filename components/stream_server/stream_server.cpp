@@ -183,25 +183,31 @@ void StreamServerComponent::write()
     uint8_t buf[128];
     ssize_t read;
     uint8_t readlog = 0;
+    uint8_t flowpin = 0;
     for (Client &client : this->clients_)
     {
         if (client.disconnected)
             continue;
-        // if (this->flow_control_pin_ != nullptr)
-        //     this->flow_control_pin_->digital_write(true);
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
         {
-            if (readlog == 0)
+            if (read > 0 && flowpin == 0)
             {
-                readlog = 1;
-                ESP_LOGD(TAG, "BUF %d, %d, READ %d", buf[0], buf[1], read);
+                if (this->flow_control_pin_ != nullptr)
+                    this->flow_control_pin_->digital_write(true);
+                flowpin = 1;
             }
+            // if (readlog == 0)
+            // {
+            //     readlog = 1;
+            //     ESP_LOGD(TAG, "BUF %d, %d, READ %d", buf[0], buf[1], read);
+            // }
             this->stream_->write_array(buf, read);
         }
 
-        // if (this->flow_control_pin_ != nullptr)
-        //     this->flow_control_pin_->digital_write(false);
+        if (this->flow_control_pin_ != nullptr)
+            this->flow_control_pin_->digital_write(false);
+        flowpin = 0;
 
         if (read == 0 || errno == ECONNRESET)
         {
