@@ -49,7 +49,7 @@ protected:
     void accept();
     void cleanup();
     void read();
-    void flush();
+    void ss_flush();
     void write();
 
     esphome::GPIOPin *flow_control_pin_{nullptr};
