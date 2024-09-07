@@ -190,9 +190,10 @@ void StreamServerComponent::write()
         //     this->flow_control_pin_->digital_write(true);
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
-
-        ESP_LOGD(TAG, "BUF %d, %d, READ %d", buf[0], buf[1], read);
-        this->stream_->write_array(buf, read);
+        {
+            ESP_LOGD(TAG, "BUF %d, %d, READ %d", buf[0], buf[1], read);
+            this->stream_->write_array(buf, read);
+        }
 
         // if (this->flow_control_pin_ != nullptr)
         //     this->flow_control_pin_->digital_write(false);
