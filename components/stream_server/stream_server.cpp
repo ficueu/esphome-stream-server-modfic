@@ -182,6 +182,7 @@ void StreamServerComponent::write()
 {
     uint8_t buf[128];
     ssize_t read;
+    uint8_t readlog = 0;
     for (Client &client : this->clients_)
     {
         if (client.disconnected)
@@ -191,7 +192,11 @@ void StreamServerComponent::write()
 
         while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
         {
-            ESP_LOGD(TAG, "BUF %d, %d, READ %d", buf[0], buf[1], read);
+            if (readlog == 0)
+            {
+                readlog = 1;
+                ESP_LOGD(TAG, "BUF %d, %d, READ %d", buf[0], buf[1], read);
+            }
             this->stream_->write_array(buf, read);
         }
 
